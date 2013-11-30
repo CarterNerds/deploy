@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+printf "\n"
+echo "Reading config...."
+source ./deploy.cfg
+
+location=$1
+
+#username
+temp_username=$1_username
+username=${!temp_username}
+
+#host
+temp_host=$1_host
+host=${!temp_host}
+
+#password
+temp_password=$1_password
+password=${!temp_password}
+
+#path
+temp_path=$1_path
+path=${!temp_path}
+
+#branch
+temp_branch=$1_branch
+branch=${!temp_branch}
+
+echo "Are you sure you want to deploy to $1, [y|n] followed by [ENTER]:"
+read confirm
+
+if [ $confirm != "y" ]; then
+    echo "Exiting"
+    exit
+fi
+
+if [ $2 == "push" ]; then
+    git push origin $branch
+    echo "Pushed to git repo"
+elif [ $2 == "commit-push" ]; then
+    echo "Commit message, followed by [ENTER]:"
+    read commit_message
+    git add .
+    git commit -m "$commit_message"
+    echo "Commited to git"
+    git push origin $branch
+    echo "Pushed to git repo"
+fi
+
+echo "Deploying to $1..."
+expect <<- DONE
+    log_user 0
+    set timeout 10
+    spawn ssh $username@$host
+    expect "*?assword:*"
+    send -- "$password\r"
+    send -- "cd $path\r"
+    sleep 2
+    send -- "git pull origin $branch\r"
+
+    # Look for passwod prompt
+    expect "*?passphrase*"
+    # Send password aka $password
+    send -- "$password\r"
+    send -- "\r"
+    # send blank line (\r) to make sure we get back to gui
+
+    expect eof
+
+DONE
+
+printf "\n------------------------------------"
+printf "\nCompleted deployment to $1"
+printf "\n------------------------------------"
+printf "\n"
