@@ -4,7 +4,7 @@ Deploy
 Bash script to handle Git deployment
 ------------------------------------
 
-After downloading move the deploy file to /usr/local/bin for each access via the command:
+After downloading move the deploy file to /usr/local/bin for each access via the terminal command:
 deploy
 
 ##Deploying to a server:
@@ -36,10 +36,10 @@ Open terminal and navigate to your working directory, from there you may run:
 
 deploy server-name
 
-Using an example from above:
-
+Using an example from the deploy.cfg snippet above:
+```
 deploy staging
-
+```
 This would log in to the staging server and pull any commits from the master branch.
 
 ##Extras
@@ -50,10 +50,20 @@ To aid with workflow there's a couple of extras:
 
 deploy server-name push
 
+Using an example from the deploy.cfg snippet above:
+```
+deply staging push
+```
+
 This would push all the local commits in the branch specified to the remote repo and deploy to the given server.
 
 ###Commit & Push
 
 deploy server-name commit-push
+
+Using an example from the deploy.cfg snippet above:
+```
+deploy staging commit-push
+```
 
 This would make a local commit, asking for a commit message and push all the local commits in the branch specified to the remote repo and deploy to the given server.
