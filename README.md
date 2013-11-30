@@ -52,7 +52,7 @@ deploy server-name push
 
 Using an example from the deploy.cfg snippet above:
 ```
-deply staging push
+deploy staging push
 ```
 
 This would push all the local commits in the branch specified to the remote repo and deploy to the given server.
